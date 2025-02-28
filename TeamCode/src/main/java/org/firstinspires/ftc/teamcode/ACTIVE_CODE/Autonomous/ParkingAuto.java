@@ -34,7 +34,8 @@ public class ParkingAuto extends LinearOpMode{
         // Ожидание старта автономного режима
         waitForStart();
         if (opModeIsActive()) {
-            move(0.3, 10000);
+            move(0.3, 5000);
+            move(-0.3, 5000);
         }
     }
 
