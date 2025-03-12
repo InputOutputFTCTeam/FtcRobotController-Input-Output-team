@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.notUsed_trash.Sensored;
+package org.firstinspires.ftc.teamcode.ACTIVE_CODE.Sensored;
 
 import static java.lang.Math.abs;
 
@@ -8,13 +8,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.ForTheNationalChampionship.Basic.BasicDriveTrain;
+import org.firstinspires.ftc.teamcode. ACTIVE_CODE.BasicModules.Wheelbase
 //TODO: проверить документацию для датчика расстояния
 /**
  * В этом классе описываются методы работы для датчика расстояния в режиме TeleOp
  */
 
-public class BackBoard extends BasicDriveTrain {
+public class BackBoard extends Wheelbase {
     //private BasicDriveTrain wheelbase;
     private DistanceSensor sensorDistance;
     private final LinearOpMode dsOpMode;
@@ -24,7 +24,7 @@ public class BackBoard extends BasicDriveTrain {
      */
     public BackBoard(LinearOpMode opMode) {
         dsOpMode = opMode;
-        new BasicDriveTrain(dsOpMode);
+        new Wheelbase(dsOpMode);
     }
     /**
      * иниицализация колёсной базы
@@ -32,11 +32,11 @@ public class BackBoard extends BasicDriveTrain {
     public void initBackBoard() {
         setOpMode(dsOpMode);
         sensorDistance = dsOpMode.hardwareMap.get(DistanceSensor.class, "sensor_distance");
-        initMotors();
-        setModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setModes(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        setOneDirection(DcMotorSimple.Direction.FORWARD);
-        setZeroPowerBehaviors(DcMotor.ZeroPowerBehavior.BRAKE);
+        initedWheelbase();
+        setModesWheel(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setModesWheel(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setOneDirectionWheel(DcMotorSimple.Direction.FORWARD);
+        setZeroPowerBehaviorsWheel(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     /**
      * задаёт дистанцию в миллиметрах
@@ -84,17 +84,5 @@ public class BackBoard extends BasicDriveTrain {
             setMaximumSpeed(1);
             move(x, y, r);
         }
-    }
-    /**
-     * добавление отдельного потока телеметрии о текущем расстоянии до задника
-     */
-    public void telemetryBackBoard() {
-        Thread thread = new Thread(() -> {
-            dsOpMode.telemetry.addData("ranghesens", distanceMM());
-            dsOpMode.telemetry.update();
-        });
-        thread.start();
-        wheelbaseTelemetry();
-        dsOpMode.telemetry.addLine(driveMode ? "DISTANCE FAST" : "DISTANCE SLOW");
     }
 }

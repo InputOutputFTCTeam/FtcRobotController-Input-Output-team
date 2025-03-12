@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.notUsed_trash.Sensored;
+package org.firstinspires.ftc.teamcode.wheelbase.Sensored;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
@@ -6,18 +6,13 @@ import static java.lang.Math.abs;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.ForTheNationalChampionship.Basic.BasicDriveTrain;
-import org.firstinspires.ftc.teamcode.ForTheNationalChampionship.Sensors.ColorSensorModule;
-import org.firstinspires.ftc.teamcode.ForTheNationalChampionship.Sensors.DistanceSensorModule;
-import org.firstinspires.ftc.teamcode.ForTheNationalChampionship.Sensors.IMUAsSensor;
+import org.firstinspires.ftc.teamcode.wheelbase.Basic.BasicDriveTrain;
+import org.firstinspires.ftc.teamcode.wheelbase.Sensors.IMUAsSensor;
 
 public class MegaDriveTrain extends BasicDriveTrain {
     LinearOpMode gigaOpMode;
-    DistanceSensorModule dist = null;
-    ColorSensorModule clr = null;
     IMUAsSensor imu = null;
 
     /**
@@ -27,8 +22,6 @@ public class MegaDriveTrain extends BasicDriveTrain {
     public MegaDriveTrain(LinearOpMode opMode) {
         gigaOpMode = opMode;
         new BasicDriveTrain(gigaOpMode);        //конструирует базовую к.б.
-        dist = new DistanceSensorModule(gigaOpMode);
-        clr = new ColorSensorModule(gigaOpMode);
         imu = new IMUAsSensor(gigaOpMode);
     }
 
@@ -43,8 +36,6 @@ public class MegaDriveTrain extends BasicDriveTrain {
 
         setZeroPowerBehaviors(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        dist.initDistanceSensor();
-        clr.initColorSensor();
         imu.initIMU();
 
         gigaOpMode.telemetry.addLine("all inited");
@@ -194,27 +185,7 @@ public class MegaDriveTrain extends BasicDriveTrain {
      * @param r         скорость поворота вокруг своей оси
      * @param colorName название цвета линии на поле
      */
-    public void colorRun(double x, double y, double r, ColorSensorModule.colorsField colorName) {
-        ElapsedTime timer = new ElapsedTime();
-        timer.reset();  //создаем и запускаем таймер, который по истечении времени остановит работу процедуры.
-        while (gigaOpMode.opModeIsActive() && !clr.getColorOfField().equals(colorName)) {
-            clr.updateColor();
-            move(x, y, r);
-            gigaOpMode.telemetry.addLine(String.format("%5f %5f", getTL().getPower(), getTR().getPower()));
-            gigaOpMode.telemetry.addLine(String.format("%5f %5f", getBL().getPower(), getBR().getPower()));
 
-            gigaOpMode.telemetry.addData("i see ", clr.getColorOfField());
-            clr.telemetryColor();
-            gigaOpMode.telemetry.update();
-
-            //проверяем, не вышло ли время на выполнение задачи
-            if (timer.milliseconds() > 2500) {
-                break;
-            }
-        }
-        move(0, 0, 0);
-        gigaOpMode.sleep(100);
-    }
 
     /**
      * Проезд для приближения на определенную дистанцию к объекту перед датчиком расстояния
@@ -224,12 +195,6 @@ public class MegaDriveTrain extends BasicDriveTrain {
      * @param r          скорость поворота вокруг своей оси
      * @param distanceMM минимальное расстояние между объектом и датчиком расстояния
      */
-    public void distanceRunEnclose(double x, double y, double r, int distanceMM) {
-        while (gigaOpMode.opModeIsActive() && dist.distanceMM() >= distanceMM) {
-            move(x, y, r);
-        }
-        move(0, 0, 0);
-    }
 
     /**
      * Проезд для отдаления на определенную дистанцию от объекта перед датчиком расстояния
@@ -239,12 +204,6 @@ public class MegaDriveTrain extends BasicDriveTrain {
      * @param r          скорость поворота вокруг своей оси
      * @param distanceMM максимальное расстояние между объектом и датчиком расстояния
      */
-    public void distanceRunRetreat(double x, double y, double r, int distanceMM) {
-        while (gigaOpMode.opModeIsActive() && dist.distanceMM() <= distanceMM) {
-            move(x, y, r);
-        }
-        move(0, 0, 0);
-    }
 
     /**
      * Проезд на расстояние с контролем направления этого движения. Можно повернуться просто, а можно проехать поворачиваясь.
